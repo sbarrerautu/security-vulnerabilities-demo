@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Vulnerabilities Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .warning strong {
+            color: #856404;
+        }
+        
+        .vuln-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            transition: transform 0.2s;
+        }
+        
+        .vuln-section:hover {
+            transform: translateX(5px);
+        }
+        
+        .vuln-title {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .vuln-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .vuln-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .demo-area {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            display: block;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            display: block;
+        }
+        
+        .result.warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            display: block;
+        }
+        
+        .code-display {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        
+        .hidden-data {
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .sql-query {
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Security Vulnerabilities Demo</h1>
+        <p class="subtitle">Interactive Educational Application - 15 Simulated Vulnerabilities</p>
+        
+        <div class="warning">
+            <strong>⚠️ IMPORTANT:</strong> This is an educational demonstration environment. These examples show common vulnerabilities that should NEVER exist in real applications.
+        </div>
+
+        <!-- Vulnerability 1: XSS Basic -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">1</span>
+                XSS (Cross-Site Scripting) - Basic
+            </h3>
+            <p class="vuln-description">
+                XSS allows injecting malicious JavaScript code. Try typing: <code>&lt;script&gt;alert('XSS Attack!')&lt;/script&gt;</code>
+            </p>
+            <div class="demo-area">
+                <label>Enter your name:</label>
+                <input type="text" id="xss-input" placeholder="Type here...">
+                <button onclick="showGreeting()">Show Greeting</button>
+                <div id="xss-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 2: Buffer Overflow Simulated -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">2</span>
+                Inadequate Length Validation
+            </h3>
+            <p class="vuln-description">
+                This field has a limit of 100 characters but it's not properly validated. Try entering more than 100 characters.
+            </p>
+            <div class="demo-area">
+                <label>Field with limit (supposedly 100 characters):</label>
+                <textarea id="buffer-input" rows="3" placeholder="Write more than 100 characters..."></textarea>
+                <button onclick="validateBuffer()">Send Data</button>
+                <div id="buffer-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 3: SQL Injection -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">3</span>
+                SQL Injection (Simulated)
+            </h3>
+            <p class="vuln-description">
+                Input is directly concatenated in an SQL query. Try: <code>' OR '1'='1</code>
+            </p>
+            <div class="demo-area">
+                <label>Username:</label>
+                <input type="text" id="sql-user" placeholder="admin">
+                <label>Password:</label>
+                <input type="password" id="sql-pass" placeholder="Try: ' OR '1'='1">
+                <button onclick="loginSQL()">Login</button>
+                <div id="sql-result"></div>
+                <div id="sql-query" class="sql-query" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 4: Client-Side Validation Only -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">4</span>
+                Client-Side Only Validation
+            </h3>
+            <p class="vuln-description">
+                The field is "disabled" only in HTML. Open developer tools (F12) and remove the "disabled" attribute.
+            </p>
+            <div class="demo-area">
+                <label>Supposedly protected field:</label>
+                <input type="text" id="client-input" value="Protected Data" disabled>
+                <button onclick="validateClient()">Verify Protection</button>
+                <div id="client-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 5: Weak Password -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">5</span>
+                Weak Password Validation
+            </h3>
+            <p class="vuln-description">
+                This system accepts very weak passwords. Try: "123", "password", "admin".
+            </p>
+            <div class="demo-area">
+                <label>New Password:</label>
+                <input type="password" id="weak-pass" placeholder="Try weak passwords">
+                <button onclick="validatePassword()">Create Password</button>
+                <div id="pass-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 6: Sensitive Information in HTML -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">6</span>
+                Sensitive Information Exposure
+            </h3>
+            <p class="vuln-description">
+                Sensitive information is hidden with CSS but visible in HTML code. Open developer tools (F12) and inspect this section.
+            </p>
+            <div class="demo-area">
+                <p>Current user: <strong>admin</strong></p>
+                <div style="display:none;" class="hidden-data">
+                    <!-- API Key: sk_live_51234567890abcdef -->
+                    <!-- Database Password: SuperSecret123! -->
+                    <!-- Admin Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 -->
+                </div>
+                <button onclick="showSecrets()">View Public Data</button>
+                <div id="secret-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 7: Path Traversal -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">7</span>
+                Path Traversal (Simulated)
+            </h3>
+            <p class="vuln-description">
+                Allows accessing files outside the permitted directory. Try: <code>../../etc/passwd</code>
+            </p>
+            <div class="demo-area">
+                <label>File to load (from /uploads/ directory):</label>
+                <input type="text" id="path-input" placeholder="image.jpg or ../../etc/passwd">
+                <button onclick="loadFile()">Load File</button>
+                <div id="path-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 8: Command Injection -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">8</span>
+                Command Injection (Simulated)
+            </h3>
+            <p class="vuln-description">
+                Input is passed directly to a system command. Try: <code>127.0.0.1; cat /etc/passwd</code>
+            </p>
+            <div class="demo-area">
+                <label>IP to ping:</label>
+                <input type="text" id="cmd-input" placeholder="192.168.1.1">
+                <button onclick="executePing()">Execute Ping</button>
+                <div id="cmd-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 9: CSRF -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">9</span>
+                CSRF - No Protection Token
+            </h3>
+            <p class="vuln-description">
+                This critical action doesn't require a CSRF token. A malicious site could execute this action without your consent.
+            </p>
+            <div class="demo-area">
+                <label>Amount to transfer:</label>
+                <input type="text" id="csrf-amount" placeholder="1000">
+                <label>Destination account:</label>
+                <input type="text" id="csrf-account" placeholder="12345678">
+                <button onclick="transferMoney()">Transfer Money</button>
+                <div id="csrf-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 10: Session in URL -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">10</span>
+                Session ID in URL
+            </h3>
+            <p class="vuln-description">
+                Session ID is exposed in the URL instead of using secure cookies.
+            </p>
+            <div class="demo-area">
+                <button onclick="generateSessionURL()">Login</button>
+                <div id="session-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 11: Autocomplete on Passwords -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">11</span>
+                Autocomplete Enabled on Sensitive Fields
+            </h3>
+            <p class="vuln-description">
+                Sensitive data is saved in browser autocomplete.
+            </p>
+            <div class="demo-area">
+                <label>Card Number:</label>
+                <input type="text" id="card-number" placeholder="1234-5678-9012-3456" autocomplete="on">
+                <label>CVV:</label>
+                <input type="text" id="cvv" placeholder="123" autocomplete="on">
+                <button onclick="processPayment()">Process Payment</button>
+                <div id="payment-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 12: Unvalidated Redirect -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">12</span>
+                Open Redirect
+            </h3>
+            <p class="vuln-description">
+                Allows redirecting to any URL without validation. Try: <code>https://malicious-site.com</code>
+            </p>
+            <div class="demo-area">
+                <label>Redirect URL:</label>
+                <input type="text" id="redirect-url" placeholder="https://example.com">
+                <button onclick="redirect()">Go to Site</button>
+                <div id="redirect-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 13: Information in Errors -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">13</span>
+                Detailed Error Messages
+            </h3>
+            <p class="vuln-description">
+                Error messages reveal system information that facilitates attacks.
+            </p>
+            <div class="demo-area">
+                <label>Username:</label>
+                <input type="text" id="error-user" placeholder="username">
+                <button onclick="attemptLogin()">Login</button>
+                <div id="error-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 14: HTML Injection -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">14</span>
+                HTML Injection
+            </h3>
+            <p class="vuln-description">
+                Allows injecting HTML that modifies the site's appearance. Try: <code>&lt;h1&gt;Hacked!&lt;/h1&gt;</code> or <code>&lt;img src=x onerror=alert('HTML Injection')&gt;</code>
+            </p>
+            <div class="demo-area">
+                <label>Blog comment:</label>
+                <textarea id="html-input" rows="3" placeholder="Write a comment..."></textarea>
+                <button onclick="publishComment()">Publish</button>
+                <div id="html-result"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability 15: Direct Object Access -->
+        <div class="vuln-section">
+            <h3 class="vuln-title">
+                <span class="vuln-number">15</span>
+                Insecure Direct Object Reference (IDOR)
+            </h3>
+            <p class="vuln-description">
+                Allows accessing other users' resources by changing IDs. Try changing the ID to 1, 2, 3, etc.
+            </p>
+            <div class="demo-area">
+                <label>User ID:</label>
+                <input type="text" id="idor-id" placeholder="1234" value="1234">
+                <button onclick="viewProfile()">View Profile</button>
+                <div id="idor-result"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Vulnerability 1: XSS - REALLY EXECUTES THE SCRIPT
+        function showGreeting() {
+            const input = document.getElementById('xss-input').value;
+            const result = document.getElementById('xss-result');
+            // VULNERABLE: innerHTML allows script execution
+            result.innerHTML = `<div class="result success">Hello, ${input}!</div>`;
+        }
+
+        // Vulnerability 2: Buffer Overflow
+        function validateBuffer() {
+            const input = document.getElementById('buffer-input').value;
+            const result = document.getElementById('buffer-result');
+            
+            // VULNERABLE: Doesn't validate length
+            if (input.length > 100) {
+                result.innerHTML = `<div class="result error">⚠️ Vulnerability detected! You entered ${input.length} characters. The system should reject this but doesn't.</div>`;
+            } else {
+                result.innerHTML = `<div class="result success">Data sent successfully (${input.length} characters).</div>`;
+            }
+        }
+
+        // Vulnerability 3: SQL Injection
+        function loginSQL() {
+            const user = document.getElementById('sql-user').value;
+            const pass = document.getElementById('sql-pass').value;
+            const result = document.getElementById('sql-result');
+            const queryDiv = document.getElementById('sql-query');
+            
+            // VULNERABLE: Direct concatenation in SQL
+            const query = `SELECT * FROM users WHERE username='${user}' AND password='${pass}'`;
+            queryDiv.textContent = `Query executed: ${query}`;
+            queryDiv.style.display = 'block';
+            
+            // Simulate successful SQL Injection
+            if (pass.includes("' OR '1'='1") || pass.includes("' OR 1=1")) {
+                result.innerHTML = `<div class="result error">🚨 ACCESS GRANTED! SQL injection worked. You've bypassed authentication.</div>`;
+            } else if (user === "admin" && pass === "admin123") {
+                result.innerHTML = `<div class="result success">Access granted with valid credentials.</div>`;
+            } else {
+                result.innerHTML = `<div class="result warning">Access denied with normal credentials.</div>`;
+            }
+        }
+
+        // Vulnerability 4: Client Validation
+        function validateClient() {
+            const input = document.getElementById('client-input');
+            const result = document.getElementById('client-result');
+            
+            if (!input.disabled) {
+                result.innerHTML = `<div class="result error">⚠️ You've disabled browser protection! Modified value: "${input.value}"</div>`;
+            } else {
+                result.innerHTML = `<div class="result success">Field is protected... or so it seems.</div>`;
+            }
+        }
+
+        // Vulnerability 5: Weak Password
+        function validatePassword() {
+            const pass = document.getElementById('weak-pass').value;
+            const result = document.getElementById('pass-result');
+            
+            const weakPasswords = ['123', '1234', '12345', 'password', 'admin', '123456', 'qwerty'];
+            
+            // VULNERABLE: Doesn't validate strength
+            if (weakPasswords.includes(pass.toLowerCase())) {
+                result.innerHTML = `<div class="result error">⚠️ Password accepted! But it's extremely weak and easy to guess.</div>`;
+            } else if (pass.length < 6) {
+                result.innerHTML = `<div class="result error">⚠️ Password accepted! It's very short (${pass.length} characters).</div>`;
+            } else {
+                result.innerHTML = `<div class="result success">Password created successfully.</div>`;
+            }
+        }
+
+        // Vulnerability 6: Sensitive Information
+        function showSecrets() {
+            const result = document.getElementById('secret-result');
+            result.innerHTML = `<div class="result warning">
+                ℹ️ Public data is visible. But there's sensitive data hidden in the HTML.<br>
+                <strong>Hint:</strong> Press F12 and look for HTML comments in this section.
+            </div>`;
+        }
+
+        // Vulnerability 7: Path Traversal
+        function loadFile() {
+            const path = document.getElementById('path-input').value;
+            const result = document.getElementById('path-result');
+            
+            // VULNERABLE: Doesn't validate path traversal
+            if (path.includes('..')) {
+                result.innerHTML = `<div class="result error">
+                    🚨 Path Traversal detected!<br>
+                    Requested path: /uploads/${path}<br>
+                    This would allow access to: ${path}<br>
+                    In a real system, you could access sensitive system files.
+                </div>`;
+            } else {
+                result.innerHTML = `<div class="result success">File loaded: /uploads/${path}</div>`;
+            }
+        }
+
+        // Vulnerability 8: Command Injection
+        function executePing() {
+            const input = document.getElementById('cmd-input').value;
+            const result = document.getElementById('cmd-result');
+            
+            // VULNERABLE: Doesn't sanitize input
+            if (input.includes(';') || input.includes('|') || input.includes('&')) {
+                result.innerHTML = `<div class="result error">
+                    🚨 Command injection detected!<br>
+                    Command that would be executed: <code>ping ${input}</code><br>
+                    This would allow executing arbitrary system commands.
+                </div>`;
+            } else {
+                result.innerHTML = `<div class="result success">
+                    Executing: <code>ping ${input}</code><br>
+                    Result: 64 bytes received, time=10ms
+                </div>`;
+            }
+        }
+
+        // Vulnerability 9: CSRF
+        function transferMoney() {
+            const amount = document.getElementById('csrf-amount').value;
+            const account = document.getElementById('csrf-account').value;
+            const result = document.getElementById('csrf-result');
+            
+            // VULNERABLE: Doesn't verify CSRF token
+            result.innerHTML = `<div class="result error">
+                ⚠️ Transfer completed without CSRF token!<br>
+                Amount: $${amount}<br>
+                Destination: ${account}<br>
+                An attacker could force this action from another website.
+            </div>`;
+        }
+
+        // Vulnerability 10: Session ID in URL
+        function generateSessionURL() {
+            const sessionId = Math.random().toString(36).substring(2, 15);
+            const result = document.getElementById('session-result');
+            
+            result.innerHTML = `<div class="result error">
+                ⚠️ Session started. Generated URL:<br>
+                <code>https://mybank.com/dashboard?sessionid=${sessionId}</code><br>
+                This URL could be accidentally shared, exposing your session.
+            </div>`;
+        }
+
+        // Vulnerability 11: Autocomplete
+        function processPayment() {
+            const card = document.getElementById('card-number').value;
+            const cvv = document.getElementById('cvv').value;
+            const result = document.getElementById('payment-result');
+            
+            result.innerHTML = `<div class="result error">
+                ⚠️ Payment processed.<br>
+                Note: Data has been saved in browser autocomplete.<br>
+                Anyone with access to this computer could see it.
+            </div>`;
+        }
+
+        // Vulnerability 12: Open Redirect
+        function redirect() {
+            const url = document.getElementById('redirect-url').value;
+            const result = document.getElementById('redirect-result');
+            
+            // VULNERABLE: Doesn't validate destination URL
+            result.innerHTML = `<div class="result warning">
+                ⚠️ Redirecting to: ${url}<br>
+                (On a real site you would be redirected now)<br>
+                An attacker could use this in phishing: mybank.com/redirect?url=fake-site.com
+            </div>`;
+        }
+
+        // Vulnerability 13: Detailed Error Messages
+        function attemptLogin() {
+            const user = document.getElementById('error-user').value;
+            const result = document.getElementById('error-result');
+            
+            // VULNERABLE: Reveals if user exists
+            if (user === 'admin' || user === 'root') {
+                result.innerHTML = `<div class="result error">
+                    Error: Incorrect password for user '${user}'<br>
+                    <small>Connection to: DB_SERVER: mysql-prod-01.internal.com:3306<br>
+                    Database: users_db<br>
+                    Failed attempt logged in: /var/log/auth.log</small>
+                </div>`;
+            } else {
+                result.innerHTML = `<div class="result error">
+                    Error: User '${user}' doesn't exist in the system<br>
+                    <small>Table consulted: users<br>
+                    Query: SELECT * FROM users WHERE username='${user}'</small>
+                </div>`;
+            }
+        }
+
+        // Vulnerability 14: HTML Injection - REALLY INJECTS HTML
+        function publishComment() {
+            const comment = document.getElementById('html-input').value;
+            const result = document.getElementById('html-result');
+            
+            // VULNERABLE: innerHTML allows arbitrary HTML (including scripts via img onerror, etc.)
+            result.innerHTML = `<div class="result warning">
+                <strong>Comment published:</strong><br>
+                ${comment}
+            </div>`;
+        }
+
+        // Vulnerability 15: IDOR
+        function viewProfile() {
+            const id = document.getElementById('idor-id').value;
+            const result = document.getElementById('idor-result');
+            
+            const profiles = {
+                '1234': { name: 'Your User', email: 'you@email.com', balance: '$1,000' },
+                '1': { name: 'Admin', email: 'admin@system.com', balance: '$999,999' },
+                '2': { name: 'John Doe', email: 'john@email.com', balance: '$5,432' },
+                '3': { name: 'Jane Smith', email: 'jane@email.com', balance: '$12,876' }
+            };
+            
+            // VULNERABLE: Doesn't verify authorization
+            if (profiles[id]) {
+                const profile = profiles[id];
+                result.innerHTML = `<div class="result ${id === '1234' ? 'success' : 'error'}">
+                    ${id !== '1234' ? '⚠️ ' : ''}Profile ID #${id}:<br>
+                    Name: ${profile.name}<br>
+                    Email: ${profile.email}<br>
+                    Balance: ${profile.balance}<br>
+                    ${id !== '1234' ? '<strong>You\'ve accessed another user\'s data!</strong>' : ''}
+                </div>`;
+            } else {
+                result.innerHTML = `<div class="result warning">User not found.</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
